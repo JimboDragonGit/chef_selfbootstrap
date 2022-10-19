@@ -18,20 +18,16 @@
 # camel-casing throughout the remainder of the name.
 #
 
+require_relative '../withchef'
+
 module ChefWorkstationInitialize
   module SelfBootstrap
-    module WithChef
-      module DefaultValuesHelpers
-        def generate_directory(dir_path)
-          directory get_path(dir_path) do
-            group workstation_resource[:group]
-            mode '0775'
-            recursive true
-          end
-        end
+    module WithLogger
+      module DefaultMethodsHelpers
+        include ChefWorkstationInitialize::SelfBootstrap::NoChef::SelfBootstrapHelpers
 
         def worklog(logstr)
-          Chef::Log.warn("\n\n(#{worklog_counter})WORKLOG:: #{logstr}\n\n")
+          logger.warn("\n\n(#{worklog_counter})WORKLOG:: #{logstr}\n\n")
         end
       end
     end

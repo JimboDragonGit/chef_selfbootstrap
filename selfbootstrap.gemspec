@@ -3,15 +3,6 @@
 # ChefWorkstationInitialize::SelfBootstrap.extend_helpers
 # extend ChefWorkstationInitialize::SelfBootstrap
 
-module Jimbobob
-  def self.get_all_files_from_folder(folder)
-    Dir.new(folder).children.map do |child_path|
-      folder_child = File.join(folder, child_path)
-      Dir.exist?(folder_child) ? get_all_files_from_folder(folder_child) : ::Dir[::File.dirname(folder_child) + '/*.rb']
-    end.flatten if Dir.exist?(folder)
-  end
-end
-
 Gem::Specification.new do |s|
   s.name          = 'selfbootstrap'
   s.version       = '0.1.0'
@@ -25,12 +16,15 @@ Gem::Specification.new do |s|
   # all_files       = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   # s.files         = all_files.grep(%r!^(exe|lib|rubocop)/|^.rubocop.yml$!)
   code_folder = 'lib/'
-  s.files = Jimbobob.get_all_files_from_folder(code_folder)
+  s.files = %w(README.md LICENSE) + Dir.glob('{bin,lib,certs,test}/**/*')
   s.require_paths = [code_folder]
-  # s.executables   = all_files.grep(%r!^exe/!) { |f| File.basename(f) }
+  s.executables   = %w(selfbootstrap)
   # s.bindir        = 'exe'
 
-  s.metadata      = {
+  s.cert_chain  = ['certs/public/jimbodragon.pem']
+  s.signing_key = File.expand_path('../../certs/private/jimbodragon-gem-private_key.pem') if $PROGRAM_NAME =~ /gem\z/
+
+  s.metadata = {
     # 'source_code_uri' => '/home/git/selfbootstrap.git/',
     'bug_tracker_uri' => 'https://localhost.local/selfbootstrap/issues',
     'changelog_uri'   => 'https://localhost.local/selfbootstrap/releases',
@@ -43,7 +37,7 @@ Gem::Specification.new do |s|
   # s.required_ruby_version     = '>= 2.5.0'
   # s.required_rubygems_version = '>= 2.7.0'
 
-  # s.add_runtime_dependency('withlogger', '~> 0.1')
+  s.add_runtime_dependency('test-kitchen')
 
   # s.add_runtime_dependency('colorator',             '~> 1.0')
   # s.add_runtime_dependency('em-websocket',          '~> 0.5')

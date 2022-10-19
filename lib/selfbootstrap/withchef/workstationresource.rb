@@ -17,25 +17,25 @@ module ChefWorkstationInitialize
       module WorkstationResourceHelpers
         include ChefWorkstationInitialize::SelfBootstrap::WithChef::WorkstationHelpers
 
-        class ChefConfigResource < ChefWorkstationInitialize::SelfBootstrap::NoChef::WorkstationResourceHelpers::DefaultWorkstationResource
-          include ChefWorkstationInitialize::SelfBootstrap::WithChef
+        # class ChefConfigResource < ChefWorkstationInitialize::SelfBootstrap::NoChef::WorkstationResourceHelpers::DefaultWorkstationResource
+        #   include ChefWorkstationInitialize::SelfBootstrap::WithChef
 
-          def [](key)
-            debug_worklog('Searching config key" ' + key.to_s + '"') unless key.to_s == 'debug'
-            if default_workstation_resource.key?(key)
-              default_workstation_resource[key]
-            elsif default_workstation_resource.key?(key.to_s)
-              default_workstation_resource[key.to_s]
-            end
-          end
-        end
+        #   def [](key)
+        #     debug_worklog('Searching config key" ' + key.to_s + '"') unless key.to_s == 'debug'
+        #     if default_workstation_resource.key?(key)
+        #       default_workstation_resource[key]
+        #     elsif default_workstation_resource.key?(key.to_s)
+        #       default_workstation_resource[key.to_s]
+        #     end
+        #   end
+        # end
 
-        def get_workstation
-          debug_worklog "Get workstation from #{self.class}"
-          @workstation = ChefConfigResource.new if @workstation.nil?
-          swap_workstation(ChefWorkstationInitialize::SelfBootstrap::WithLogger) if respond_to? 'logger'
-          @workstation
-        end
+        # def get_workstation
+        #   debug_worklog "Get workstation from #{self.class}"
+        #   @workstation = ChefConfigResource.new if @workstation.nil?
+        #   swap_workstation(ChefWorkstationInitialize::SelfBootstrap::WithLogger) if respond_to? 'logger'
+        #   @workstation
+        # end
       end
     end
   end

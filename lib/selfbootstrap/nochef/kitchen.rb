@@ -29,6 +29,7 @@ module ChefWorkstationInitialize
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::ProvisionersHelpers
 
         def kitchen(*args, **run_opts)
+          write_kitchen_file unless args.eql? ['init']
           base_command('kitchen', args, run_opts)
         end
 

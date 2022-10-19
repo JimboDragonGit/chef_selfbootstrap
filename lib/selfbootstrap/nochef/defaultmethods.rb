@@ -24,10 +24,14 @@ require 'fileutils'
 require 'yaml'
 require 'socket'
 
+require 'kitchen'
+require 'chef'
+require 'chef/workstation_config_loader'
+
 module ChefWorkstationInitialize
   module SelfBootstrap
     module NoChef
-      module DefaultValuesHelpers
+      module DefaultMethodsHelpers
         def define_resource_requirements
         end
 
@@ -122,7 +126,7 @@ module ChefWorkstationInitialize
 
         def default_install_dir
           if @workstation.nil?
-            working_dir = ::Dir.getwd
+            working_dir = ENV['default_install_dir'].nil? ? ::Dir.getwd : ENV['default_install_dir']
             install_path = search_local_project_folder(working_dir)
             if ::Dir.exist?(install_path)
               ::Dir.new(install_path)

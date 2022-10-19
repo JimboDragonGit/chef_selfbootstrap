@@ -9,17 +9,10 @@
 # camel-casing throughout the remainder of the name.
 #
 
-require 'withchef'
 require_relative 'nochef/selfbootstrap'
 
 module ChefWorkstationInitialize
   module SelfBootstrap
-    if respond_to? 'Chef'
-      include ChefWorkstationInitialize::SelfBootstrap::WithChef
-    else
-      include ChefWorkstationInitialize::SelfBootstrap::NoChef
-    end
-
     module NoChef
       include ChefWorkstationInitialize::SelfBootstrap::NoChef::SelfBootstrapHelpers
       #

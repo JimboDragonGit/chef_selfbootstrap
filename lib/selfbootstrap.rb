@@ -13,6 +13,19 @@ require_relative 'selfbootstrap/withlogger'
 
 module ChefWorkstationInitialize
   module SelfBootstrap
+    if respond_to? 'logger'
+      include ChefWorkstationInitialize::SelfBootstrap::WithLogger
+    elsif respond_to? 'Chef'
+      include ChefWorkstationInitialize::SelfBootstrap::WithChef
+    else
+      include ChefWorkstationInitialize::SelfBootstrap::NoChef
+    end
+
+    def self.bootstrap
+      extend ChefWorkstationInitialize::SelfBootstrap
+      bootstrap_self
+    end
+
     class ::Array
       def deep_merge(second)
         if second.is_a?(Array)
@@ -36,7 +49,11 @@ module ChefWorkstationInitialize
             v2
           end
         end
-        merge(second, &merger)
+        if second.nil?
+          self
+        else
+          merge(second, &merger)
+        end
       end
 
       def stringify_keys!

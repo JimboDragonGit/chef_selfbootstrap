@@ -20,7 +20,9 @@ module ChefWorkstationInitialize
         attr_accessor :force_solo
 
         def self_bootstrap_with_kitchen
-          kitchen 'list bootstrap self', sudo: true
+          worklog 'Self bootstrap with sudo command'
+          base_command('selfbootstrap', sudo: true)
+          # kitchen 'list bootstrap self', sudo: true
         end
 
         def set_chef_profile

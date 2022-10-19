@@ -9,19 +9,17 @@
 # camel-casing throughout the remainder of the name.
 #
 
-require 'withchef'
+require_relative 'withchef'
 require_relative 'withlogger/selfbootstrap'
 
 module ChefWorkstationInitialize
   module SelfBootstrap
-    if respond_to? 'logger'
-      include ChefWorkstationInitialize::SelfBootstrap::WithLogger
-    else
-      include ChefWorkstationInitialize::SelfBootstrap::WithChef
-    end
-
     module WithLogger
       include ChefWorkstationInitialize::SelfBootstrap::WithLogger::SelfBootstrapHelpers
+
+      def worklog(logstr)
+        logger.warn("\n\n(#{worklog_counter})WORKLOG:: #{logstr}\n\n")
+      end
       #
       # Define the methods that you would like to assist the work you do in recipes,
       # resources, or templates.

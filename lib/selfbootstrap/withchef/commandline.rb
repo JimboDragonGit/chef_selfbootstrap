@@ -9,13 +9,13 @@
 # camel-casing throughout the remainder of the name.
 #
 
-require_relative 'defaultvalues'
+require_relative 'defaultmethods'
 
 module ChefWorkstationInitialize
   module SelfBootstrap
     module WithChef
       module CommandlineHelpers
-        include ChefWorkstationInitialize::SelfBootstrap::WithChef::DefaultValuesHelpers
+        include ChefWorkstationInitialize::SelfBootstrap::WithChef::DefaultMethodsHelpers
       end
     end
   end

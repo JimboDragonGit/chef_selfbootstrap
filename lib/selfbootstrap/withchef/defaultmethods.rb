@@ -18,14 +18,26 @@
 # camel-casing throughout the remainder of the name.
 #
 
-require_relative 'nochef'
-
 module ChefWorkstationInitialize
   module SelfBootstrap
-    module WithLogger
-      module DefaultValuesHelpers
+    module WithChef
+      module DefaultMethodsHelpers
+        include ChefWorkstationInitialize::SelfBootstrap::NoChef::SelfBootstrapHelpers
+
+        def generate_directory(dir_path)
+          if respond_to? :directory
+            directory get_path(dir_path) do
+              group workstation_resource[:group]
+              mode '0775'
+              recursive true
+            end
+          else
+            super(dir_path)
+          end
+        end
+
         def worklog(logstr)
-          logger.warn("\n\n(#{worklog_counter})WORKLOG:: #{logstr}\n\n")
+          ::Chef::Log.warn("(#{worklog_counter}):: #{logstr}")
         end
       end
     end

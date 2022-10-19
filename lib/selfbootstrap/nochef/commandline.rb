@@ -9,13 +9,13 @@
 # camel-casing throughout the remainder of the name.
 #
 
-require_relative 'defaultvalues'
+require_relative 'defaultmethods'
 
 module ChefWorkstationInitialize
   module SelfBootstrap
     module NoChef
       module CommandlineHelpers
-        include ChefWorkstationInitialize::SelfBootstrap::NoChef::DefaultValuesHelpers
+        include ChefWorkstationInitialize::SelfBootstrap::NoChef::DefaultMethodsHelpers
 
         def main_command(command, args = [], run_opts = {})
           command = 'sudo ' + command.to_s if run_opts[:sudo]
