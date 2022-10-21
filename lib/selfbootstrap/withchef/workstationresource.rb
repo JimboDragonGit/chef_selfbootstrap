@@ -30,12 +30,17 @@ module ChefWorkstationInitialize
         #   end
         # end
 
-        # def get_workstation
-        #   debug_worklog "Get workstation from #{self.class}"
-        #   @workstation = ChefConfigResource.new if @workstation.nil?
-        #   swap_workstation(ChefWorkstationInitialize::SelfBootstrap::WithLogger) if respond_to? 'logger'
-        #   @workstation
-        # end
+        def get_workstation
+          debug_worklog "Get workstation from #{self.class}"
+          @workstation = ChefConfigResource.new if @workstation.nil?
+          swap_workstation(ChefWorkstationInitialize::SelfBootstrap::WithLogger) if respond_to? 'logger'
+          @workstation
+        end
+
+        def workstation_resource
+          prepend ChefWorkstationInitialize::SelfBootstrap::WithChef
+          workstation_resource
+        end
       end
     end
   end

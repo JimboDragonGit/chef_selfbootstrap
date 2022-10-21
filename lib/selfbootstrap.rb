@@ -13,13 +13,7 @@ require_relative 'selfbootstrap/withlogger'
 
 module ChefWorkstationInitialize
   module SelfBootstrap
-    if respond_to? 'logger'
-      include ChefWorkstationInitialize::SelfBootstrap::WithLogger
-    elsif respond_to? 'Chef'
-      include ChefWorkstationInitialize::SelfBootstrap::WithChef
-    else
-      include ChefWorkstationInitialize::SelfBootstrap::NoChef
-    end
+    include ChefWorkstationInitialize::SelfBootstrap::NoChef
 
     def self.bootstrap
       extend ChefWorkstationInitialize::SelfBootstrap

@@ -26,6 +26,40 @@ module ChefWorkstationInitialize
       module ChefHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::BerksHelpers
 
+        def is_chef_enabled?
+          is_chef_constant_enabled? :Chef
+        end
+
+        def is_chef_command?
+          ::File.basename($PROGRAM_NAME).eql?('chef')
+        end
+
+        def is_chef_cli_command?
+          ::File.basename($PROGRAM_NAME).eql?('chef-cli')
+        end
+
+        def is_chef_client_command?
+          ::File.basename($PROGRAM_NAME).eql?('chef-client')
+        end
+
+        def is_chef_installed?
+          ::Dir.exist?('/opt/chef-workstation')
+        end
+
+        def is_chef_profile_set?
+          is_chef_installed? ? (base_command('which ruby', [], as_system: true).include? '/opt/chef-workstation') : false
+        end
+
+        def is_chefworkstation_available?
+          if is_chef_profile_set?
+            $LOAD_PATH.select do |loaded_path|
+              loaded_path.include? '/opt/chef-workstation'
+            end.count > 0
+          else
+            false
+          end
+        end
+
         def chef(*args, **run_opts)
           base_command('chef', args, run_opts)
         end
@@ -36,6 +70,10 @@ module ChefWorkstationInitialize
 
         def is_knife_gem_install?
           chef('gem list -i knife') == 'true'
+        end
+
+        def install_chef_workstation
+          base_command('curl -L https://omnitruck.chef.io/install.sh | bash -s -- -s once -P chef-workstation', [], as_system: true)
         end
       end
     end

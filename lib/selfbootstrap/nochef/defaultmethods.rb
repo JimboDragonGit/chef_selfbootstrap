@@ -24,15 +24,21 @@ require 'fileutils'
 require 'yaml'
 require 'socket'
 
-require 'kitchen'
-require 'chef'
-require 'chef/workstation_config_loader'
-
 module ChefWorkstationInitialize
   module SelfBootstrap
     module NoChef
       module DefaultMethodsHelpers
         def define_resource_requirements
+        end
+
+        def is_chef_constant_enabled?(constant)
+          # if is_chefworkstation_available?
+            constant_defined = const_defined?(constant)
+            worklog "constant_defined = #{constant_defined.class} for #{constant}"
+            constant_defined
+          # else
+          #   false
+          # end
         end
 
         def worklog_counter

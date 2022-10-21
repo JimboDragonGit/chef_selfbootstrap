@@ -17,10 +17,14 @@ module ChefWorkstationInitialize
       module CommandlineHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::DefaultMethodsHelpers
 
+        def is_mixlib_disabled?
+          !is_chef_constant_enabled? :Mixlib
+        end
+
         def main_command(command, args = [], run_opts = {})
           command = 'sudo ' + command.to_s if run_opts[:sudo]
           main_command = [command, args].compact.join(' ')
-          worklog "running \"#{main_command}\" from a shell terminal" if run_opts[:debug]
+          worklog "running \"#{main_command}\" from a shell terminal" # if run_opts[:debug]
           [main_command, run_options(run_opts)]
         end
 
@@ -31,9 +35,15 @@ module ChefWorkstationInitialize
           if respond_to?('shell_out!')
             warning_worklog('Using shell_out! as executer')
             [shell_out!(final_command, final_run_options)]
-          elsif defined?(Mixlib).nil?
-            error_worklog('Cannot continue without at least a Chef workstation setup to run command ' + final_command)
-            exit 1
+          elsif is_mixlib_disabled?
+            if run_opts[:as_system]
+              warning_worklog "Using system to run command #{final_command}"
+              system(final_command)
+            else
+              error_worklog('Cannot continue without at least a Chef workstation setup to run command ' + final_command)
+              restart_bootstrap
+              exit 1
+            end
           else
             # warning_worklog('Using Mixlib::ShellOut as executer')
             shell_command = Mixlib::ShellOut.new(final_command, final_run_options)
@@ -47,22 +57,7 @@ module ChefWorkstationInitialize
 
         def run_options(run_opts = {})
           # debug_worklog run_opts.inspect
-          env = {}
-          if workstation_resource[:user]
-            run_opts[:user] = workstation_resource[:user]
-            # Certain versions of `git` misbehave if git configuration is
-            # inaccessible in $HOME. We need to ensure $HOME matches the
-            # user who is executing `git` not the user running Chef.
-            env['HOME'] = get_homedir(workstation_resource[:user])
-          end
-          livestream = run_opts[:live].nil? || run_opts[:live]
-          run_opts[:group] = workstation_resource[:group] if workstation_resource[:group]
-          env['GIT_SSH'] = workstation_resource[:ssh_wrapper] if workstation_resource[:ssh_wrapper]
-          run_opts[:log_tag] = workstation_resource[:log_tag] if workstation_resource[:log_tag]
-          run_opts[:timeout] = workstation_resource[:timeout] if workstation_resource[:timeout]
-          env.merge!(workstation_resource[:environment_variables]) if workstation_resource[:environment_variables]
-          run_opts[:environment] = env unless env.empty?
-          run_opts[:live_stream] = $stdout if livestream
+          run_opts[:live_stream] = $stdout if run_opts[:live]
           run_opts.delete :sudo if run_opts.key? :sudo
           run_opts.delete :live if run_opts.key? :live
           run_opts.delete :debug if run_opts.key? :debug

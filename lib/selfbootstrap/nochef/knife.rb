@@ -26,6 +26,10 @@ module ChefWorkstationInitialize
       module KnifeHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::ChefRepoHelpers
 
+        def is_knife?
+          ::File.basename($PROGRAM_NAME).eql?('knife')
+        end
+
         def knife(*args, **run_opts)
           base_command('knife', *args, **run_opts)
         end
@@ -53,20 +57,8 @@ module ChefWorkstationInitialize
         end
 
         def knife_self_bootstrap_cmd
+          debug_worklog 'boostrapped with chef-server and knife'
           knife "bootstrap #{self_bootstrap_options} --policy-group #{project_name} --policy-name #{project_name} #{default_hostname}"
-        end
-
-        def chef_client_self_bootstrap_cmd
-          chef_client_options = [self_bootstrap_options]
-          chef_client_options << "--runlist #{project_name}"
-          if ::File.exist?('solo.rb')
-            chef_client_options << '-c solo.rb'
-          else
-            chef_client_options << chef_solo_options_command
-            chef_client_options << "--chef-zero-host #{default_hostname}"
-            chef_client_options << "--chef-zero-port #{default_chefzero_portrange}"
-          end
-          chef_client chef_client_options, debug: true
         end
       end
     end

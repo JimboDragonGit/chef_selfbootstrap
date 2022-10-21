@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name          = 'selfbootstrap'
-  s.version       = '0.1.0'
+  s.version       = '0.1.2'
   s.license       = 'MIT'
   s.authors       = ['Jimmy Provencher']
-  s.email         = ['maintainers@localhost.local']
-  s.homepage      = 'https://localhost.local/selfbootstrap'
+  s.email         = ['jimbo_dragon@hotmail.com']
+  s.homepage      = 'https://github.com/JimboDragonGit/chef_selfbootstrap'
   s.summary       = 'A auto chef bootstrapper and wrapper cookbook to deploy code'
   s.description   = 'Using Chef cookbook style and force any script using it to switch to chef even if it is not install. It will install it tho ;)'
 
@@ -26,8 +26,8 @@ Gem::Specification.new do |s|
 
   s.metadata = {
     # 'source_code_uri' => '/home/git/selfbootstrap.git/',
-    'bug_tracker_uri' => 'https://localhost.local/selfbootstrap/issues',
-    'changelog_uri'   => 'https://localhost.local/selfbootstrap/releases',
+    'bug_tracker_uri' => 'https://github.com/JimboDragonGit/chef_selfbootstrap/issues',
+    'changelog_uri'   => 'https://github.com/JimboDragonGit/chef_selfbootstrap/releases',
     'homepage_uri'    => s.homepage,
   }
 
@@ -37,7 +37,8 @@ Gem::Specification.new do |s|
   # s.required_ruby_version     = '>= 2.5.0'
   # s.required_rubygems_version = '>= 2.7.0'
 
-  s.add_runtime_dependency('test-kitchen')
+  s.add_runtime_dependency('chef', '<= 17.10')
+  s.add_runtime_dependency('test-kitchen', '< 4')
 
   # s.add_runtime_dependency('colorator',             '~> 1.0')
   # s.add_runtime_dependency('em-websocket',          '~> 0.5')

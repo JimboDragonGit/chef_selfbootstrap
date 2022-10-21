@@ -19,37 +19,6 @@ module ChefWorkstationInitialize
 
         attr_accessor :force_solo
 
-        def self_bootstrap_with_kitchen
-          worklog 'Self bootstrap with sudo command'
-          base_command('selfbootstrap', sudo: true)
-          # kitchen 'list bootstrap self', sudo: true
-        end
-
-        def set_chef_profile
-          bash_file = '/etc/bash.bashrc.copy'
-          chef_shell_cmd = 'eval "$(chef shell-init bash)"'
-          debug_worklog "Set chef profile tpo #{bash_file}"
-          open(bash_file, 'a') do |f|
-            f.puts chef_shell_cmd
-          end unless ::File.read(bash_file).include?(chef_shell_cmd)
-        end
-
-        def install_chef_client
-          base_command('curl -L https://omnitruck.chef.io/install.sh | sudo bash -s -- -s once -P chef-workstation')
-        end
-
-        def is_chef_installed?
-          ::Dir.exist?('/opt/chef-workstation')
-        end
-
-        def is_chef_profile_set?
-          base_command('which ruby') == '/usr/bin/chef-client'
-        end
-
-        def is_knife?
-          ::File.basename($PROGRAM_NAME).eql?('knife')
-        end
-
         def for_solo?
           is_knife? && ARGV.join(' ').include?('config show solo --format json')
         end
@@ -63,36 +32,23 @@ module ChefWorkstationInitialize
         end
 
         def is_boostrapping?
-          # debug_worklog "unauthorized_to_boostrap = #{bootstrapping_progress_file}"
-          ::File.exist?(bootstrapping_progress_file)
-        end
-
-        def is_chef_command?
-          ::File.basename($PROGRAM_NAME).eql?('chef')
-        end
-
-        def is_chef_cli_command?
-          ::File.basename($PROGRAM_NAME).eql?('chef-cli')
-        end
-
-        def is_chef_client_command?
-          ::File.basename($PROGRAM_NAME).eql?('chef-client')
-        end
-
-        def is_kitchen_command?
-          ::File.basename($PROGRAM_NAME).eql?('kitchen')
+          is_chef_enabled? ? ::File.exist?(bootstrapping_progress_file) : false
         end
 
         def unauthorized_to_boostrap?
           is_chef_command? || is_chef_client_command? || is_chef_cli_command?
         end
 
+        def run_as_root?
+          ENV['USER'] == 'root' # workstation_resource[:user] == 'root'
+        end
+
         def skip_boostrap?
           debug_worklog("for_solo = #{for_solo?}")
           debug_worklog("for_search_local_node = #{for_search_local_node?}")
-          debug_worklog("is_boostrapping = #{is_boostrapping?}")
           debug_worklog("unauthorized_to_boostrap = #{unauthorized_to_boostrap?}")
-          for_solo? || for_search_local_node? || is_boostrapping? || unauthorized_to_boostrap?
+          debug_worklog("is_boostrapping = #{is_boostrapping?}")
+          for_solo? || for_search_local_node? || unauthorized_to_boostrap? || is_boostrapping?
         end
 
         def chef_solo_options
@@ -123,6 +79,53 @@ module ChefWorkstationInitialize
           FileUtils.rm bootstrapping_progress_file if ::File.exist?(bootstrapping_progress_file)
         end
 
+        def restart_bootstrap
+          if run_as_root?
+            install_chef_workstation
+            set_chef_profile
+          else
+            worklog 'Self bootstrap with sudo command'
+            debug_worklog 'boostrapped with solo and kitchen and root'
+            remove_bootstrap_file
+            exit_status = base_command('selfbootstrap', sudo: true)
+          end
+          exit exit_status
+          # kitchen 'list bootstrap self', sudo: true
+        end
+
+        def set_chef_profile
+          bash_file = '/etc/bash.bashrc'
+          # chef_shell_cmd = "cd #{workstation_scripts_dir}; curl -L https://omnitruck.chef.io/install_desktop.sh | sudo bash -s -- #{project_name} #{environments.join(' ')}"
+          chef_shell_cmd = 'eval "$(chef shell-init bash)"'
+          debug_worklog "Set chef profile to #{bash_file}"
+          open(bash_file, 'a') do |f|
+            f.puts chef_shell_cmd
+          end unless ::File.read(bash_file).include?(chef_shell_cmd)
+        end
+
+        def bootstrap_self_command
+          if is_solo?
+            debug_worklog 'boostrapped with solo'
+            if chefworkstation_available?
+              if chef_enabled?
+                prepend ChefWorkstationInitialize::SelfBootstrap::WithChef
+                bootstrap_self_command
+              else
+                require 'kitchen'
+                require 'chef'
+                require 'chef/workstation_config_loader'
+              end
+            elsif run_as_root?
+              chef_client_self_bootstrap_cmd
+            else
+              restart_bootstrap
+            end
+          else
+            knife_self_bootstrap_cmd
+          end
+          debug_worklog 'bootstrap self command completed'
+        end
+
         def boostrapp_once
           create_chef_additionnal_dir
           berks_vendor_init unless is_self_bootsrapping?
@@ -136,24 +139,19 @@ module ChefWorkstationInitialize
           end
         end
 
-        def bootstrap_self_command
-          if is_solo?
-            debug_worklog 'boostrapped with solo'
-            if workstation_resource[:user] != 'root'
-              debug_worklog 'boostrapped with solo and kitchen and root'
-              remove_bootstrap_file
-              self_bootstrap_with_kitchen
-            else
-              debug_worklog 'boostrapped with solo and chef-client'
-              install_chef_client
-              set_chef_profile
-              chef_client_self_bootstrap_cmd
-            end
+        def chef_client_self_bootstrap_cmd
+          debug_worklog 'boostrapped with solo and chef-client'
+
+          chef_client_options = [self_bootstrap_options]
+          chef_client_options << "--runlist #{project_name}"
+          if ::File.exist?('solo.rb')
+            chef_client_options << '-c solo.rb'
           else
-            debug_worklog 'boostrapped with chef-server and knife'
-            knife_self_bootstrap_cmd
+            chef_client_options << chef_solo_options_command
+            chef_client_options << "--chef-zero-host #{default_hostname}"
+            chef_client_options << "--chef-zero-port #{default_chefzero_portrange}"
           end
-          debug_worklog 'bootstrap self command completed'
+          chef_client chef_client_options, debug: true
         end
 
         def bootstrap_self

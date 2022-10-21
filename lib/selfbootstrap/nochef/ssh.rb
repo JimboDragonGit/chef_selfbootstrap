@@ -22,7 +22,7 @@ module ChefWorkstationInitialize
         end
 
         def ssh_keygen(*args, **run_opts)
-          base_command('ssh', args, run_opts)
+          base_command('ssh-keygen', args, run_opts)
         end
 
         def ssh_command(ip_or_name, user, command)

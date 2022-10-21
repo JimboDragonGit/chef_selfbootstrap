@@ -16,10 +16,6 @@ module ChefWorkstationInitialize
   module SelfBootstrap
     module WithLogger
       include ChefWorkstationInitialize::SelfBootstrap::WithLogger::SelfBootstrapHelpers
-
-      def worklog(logstr)
-        logger.warn("\n\n(#{worklog_counter})WORKLOG:: #{logstr}\n\n")
-      end
       #
       # Define the methods that you would like to assist the work you do in recipes,
       # resources, or templates.
