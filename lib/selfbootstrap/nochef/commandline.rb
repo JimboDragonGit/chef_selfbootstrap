@@ -38,7 +38,14 @@ module ChefWorkstationInitialize
           elsif is_mixlib_disabled?
             if run_opts[:as_system]
               warning_worklog "Using system to run command #{final_command}"
-              system(final_command)
+              exit_status = system(final_command)
+              if exit_status.nil?
+                1
+              elsif exit_status.is_a?(Integer)
+                exit_status
+              else
+                2
+              end
             else
               error_worklog('Cannot continue without at least a Chef workstation setup to run command ' + final_command)
               restart_bootstrap

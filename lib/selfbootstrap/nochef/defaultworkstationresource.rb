@@ -47,47 +47,47 @@ module ChefWorkstationInitialize
           }
         end
 
-        class DefaultWorkstationResource
-          include ChefWorkstationInitialize::SelfBootstrap::NoChef
-          prepend ChefWorkstationInitialize::SelfBootstrap::NoChef
+        # class DefaultWorkstationResource
+        #   include ChefWorkstationInitialize::SelfBootstrap::NoChef
+        #   prepend ChefWorkstationInitialize::SelfBootstrap::NoChef
 
-          def initialize
-            config_loader = ChefConfig::WorkstationConfigLoader.new(nil)
-            Chef::Config.from_file(config_loader.config_location)
-          end
+        #   def initialize
+        #     config_loader = ChefConfig::WorkstationConfigLoader.new(nil)
+        #     Chef::Config.from_file(config_loader.config_location)
+        #   end
 
-          def workstation_resource_keys
-            @selfbootstrap_resource.keys
-          end
+        #   def workstation_resource_keys
+        #     @selfbootstrap_resource.keys
+        #   end
 
-          def [](key)
-            @selfbootstrap_resource ||= default_workstation_data
-            if @selfbootstrap_resource.key?(key.to_sym)
-              @selfbootstrap_resource[key.to_sym]
-            elsif @selfbootstrap_resource.key?(key.to_s)
-              @selfbootstrap_resource[key.to_s]
-            end
-          end
+        #   def [](key)
+        #     @selfbootstrap_resource ||= default_workstation_data
+        #     if @selfbootstrap_resource.key?(key.to_sym)
+        #       @selfbootstrap_resource[key.to_sym]
+        #     elsif @selfbootstrap_resource.key?(key.to_s)
+        #       @selfbootstrap_resource[key.to_s]
+        #     end
+        #   end
 
-          def get_workstation_property(property_name)
-            debug_worklog("Get property #{property_name}") # if property_name == 'group'
-            self[property_name]
-          end
+        #   def get_workstation_property(property_name)
+        #     debug_worklog("Get property #{property_name}") # if property_name == 'group'
+        #     self[property_name]
+        #   end
 
-          def set_workstation_property(property_name, value)
-            debug_worklog("Assign property #{property_name} is value #{value.is_a?(::Dir) ? get_path(value) : value}")
-            self[property_name] = value
-          end
+        #   def set_workstation_property(property_name, value)
+        #     debug_worklog("Assign property #{property_name} is value #{value.is_a?(::Dir) ? get_path(value) : value}")
+        #     self[property_name] = value
+        #   end
 
-          def render_template(generated_path, source, **variables)
-            if ::File.basename(generated_path).eq?('kitchen.yml')
-              worklog('Generating a new kitchen file')
-              kitchen 'init'
-            else
-              super(generated_path, source, variables)
-            end
-          end
-        end
+        #   def render_template(generated_path, source, **variables)
+        #     if ::File.basename(generated_path).eq?('kitchen.yml')
+        #       worklog('Generating a new kitchen file')
+        #       kitchen 'init'
+        #     else
+        #       super(generated_path, source, variables)
+        #     end
+        #   end
+        # end
       end
     end
     #

@@ -17,17 +17,6 @@ module ChefWorkstationInitialize
       module WorkstationHelpers
         include ChefWorkstationInitialize::SelfBootstrap::WithChef::UsersHelpers
 
-        def workstation_resource
-          @workstation_data ||= (
-            if Chef::Config[:selfbootstrap].nil?
-              config_loader = ChefConfig::WorkstationConfigLoader.new(nil)
-              Chef::Config.from_file(config_loader.config_location) unless config_loader.config_location.nil?
-              default_workstation_data.deep_merge Chef::Config[:selfbootstrap]
-            end
-          )
-          @workstation_data
-        end
-
         def auto_repo(auto_repo_action = nil, auto_repo_compile_time = false)
           auto_chef_repo workstation_resource[:project_name] do
             extend DefaultValuesHelpers

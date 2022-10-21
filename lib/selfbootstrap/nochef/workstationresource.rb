@@ -90,8 +90,7 @@ module ChefWorkstationInitialize
         end
 
         def workstation_resource
-          prepend ChefWorkstationInitialize::SelfBootstrap::WithChef
-          workstation_resource
+          default_workstation_data
         end
       end
     end

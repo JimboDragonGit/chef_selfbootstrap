@@ -79,17 +79,22 @@ module ChefWorkstationInitialize
           FileUtils.rm bootstrapping_progress_file if ::File.exist?(bootstrapping_progress_file)
         end
 
+        def install_this_gem
+          chef 'gem install selfbootstrap', { as_system: true }
+        end
+
         def restart_bootstrap
+          rerun_opt = { sudo: true }
           if run_as_root?
             install_chef_workstation
             set_chef_profile
-          else
-            worklog 'Self bootstrap with sudo command'
-            debug_worklog 'boostrapped with solo and kitchen and root'
-            remove_bootstrap_file
-            exit_status = base_command('selfbootstrap', sudo: true)
+            install_this_gem
+            rerun_opt[:as_system] = true
           end
-          exit exit_status
+          worklog 'Self bootstrap with sudo command'
+          debug_worklog 'boostrapped with solo and kitchen and root'
+          remove_bootstrap_file
+          exit base_command('selfbootstrap', ARGV, rerun_opt)
           # kitchen 'list bootstrap self', sudo: true
         end
 
