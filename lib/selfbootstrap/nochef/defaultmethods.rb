@@ -28,17 +28,14 @@ module ChefWorkstationInitialize
   module SelfBootstrap
     module NoChef
       module DefaultMethodsHelpers
-        def define_resource_requirements
-        end
-
-        def is_chef_constant_enabled?(constant)
-          # if is_chefworkstation_available?
-            constant_defined = const_defined?(constant)
-            worklog "constant_defined = #{constant_defined.class} for #{constant}"
-            constant_defined
-          # else
-          #   false
-          # end
+        def method_missing(method_name, *args, &block)
+          caller_worklog
+          load_chef
+          if respond_to? method_name.to_sym
+            public_send(method_name, *args, &block)
+          else
+            super
+          end
         end
 
         def worklog_counter
@@ -53,7 +50,7 @@ module ChefWorkstationInitialize
           #     file.puts logstr
           #   end
           # els
-          puts("#{DateTime.now}(#{worklog_counter}):: #{logstr}\n")
+          puts("#{DateTime.now} |#{ENV['USER']}| (#{worklog_counter}):: #{logstr}\n")
         end
 
         def error_worklog(logstr)
@@ -64,89 +61,12 @@ module ChefWorkstationInitialize
           worklog("WARN:: #{logstr}")
         end
 
+        def caller_worklog
+          worklog("CALLER:: \n#{caller.join("\n")}\n")
+        end
+
         def debug_worklog(logstr)
-          worklog("DEBUG:: #{logstr}")
-        end
-
-        def require_implement_method(method_name, *arguments)
-          warning_worklog("Method '#{method_name}' need to be implement from another module or class with arguments '#{arguments.join(', ')}'")
-        end
-
-        def get_path(dir_obj)
-          dir_obj.is_a?(::Dir) ? dir_obj.path : dir_obj
-        end
-
-        def parent_nil?(hashobject, *names)
-          hashobject.nil? ? true : hashobject.depth_nil?(names)
-        end
-
-        def default_hostname
-          respond_to?('node') ? node['hostname'] : Socket.gethostname
-        end
-
-        def default_chefzero_portrange
-          '48999-49999'
-        end
-
-        def generate_directory(dir_path)
-          corrected_dir_path = get_path(dir_path)
-          FileUtils.mkdir_p(corrected_dir_path) unless ::File.exist?(corrected_dir_path)
-          FileUtils.chown_R(workstation_resource[:user], workstation_resource[:group], corrected_dir_path)
-          FileUtils.chmod_R(0775, corrected_dir_path)
-          corrected_dir_path
-        end
-
-        def get_out_of_folder(folderpath, folder_to_get_out)
-          if get_path(folderpath).include?(folder_to_get_out)
-            get_out_of_folder(::File.dirname(folderpath))
-          else
-            folderpath
-          end
-        end
-
-        def get_out_of_cache_path(cachepath)
-          get_out_of_folder(cachepath, 'cache')
-        end
-
-        def get_out_of_local_chef_path(projectpath)
-          get_out_of_folder(projectpath, '.chef')
-        end
-
-        def search_local_project_folder(projectpath)
-          get_out_of_local_chef_path(get_out_of_cache_path(projectpath))
-        end
-
-        def check_install_dir(dir_to_check)
-          if ::File.basename(get_path(dir_to_check)) == project_name
-            search_local_project_folder(dir_to_check)
-          else
-            ::File.join(get_path(dir_to_check), project_name)
-          end
-        end
-
-        def generate_default_install_dir
-          generic_install_dir = '/usr/local/chef/repo'
-          # generate_directory default_install_dir
-          ::Dir.exist?(generic_install_dir) ? ::Dir.new(generic_install_dir) : generic_install_dir
-        end
-
-        def default_install_dir
-          if @workstation.nil?
-            working_dir = ENV['default_install_dir'].nil? ? ::Dir.getwd : ENV['default_install_dir']
-            install_path = search_local_project_folder(working_dir)
-            if ::Dir.exist?(install_path)
-              ::Dir.new(install_path)
-            else
-              error_worklog("Unable to get the project from '#{install_path}' while in the folder #{working_dir}")
-            end
-          # elsif respond_to?('node')
-          #   check_install_dir ::Dir.new("/usr/local/chef/repo/#{node['infra_chef']['project_name']}")
-          elsif workstation_resource[:install_dir].nil?
-            debug_worklog('workstation defined but install_dir not define')
-            generate_default_install_dir
-          else
-            check_install_dir workstation_resource[:install_dir]
-          end
+          # worklog("DEBUG:: #{logstr}")
         end
 
         def analyse_object(object)

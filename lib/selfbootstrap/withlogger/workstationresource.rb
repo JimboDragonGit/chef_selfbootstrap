@@ -16,25 +16,6 @@ module ChefWorkstationInitialize
     module WithLogger
       module WorkstationResourceHelpers
         include ChefWorkstationInitialize::SelfBootstrap::WithLogger::DefaultMethodsHelpers
-
-        # class ChefLoggerResource < ChefWorkstationInitialize::SelfBootstrap::WithChef::WorkstationResourceHelpers::ChefConfigResource
-        #   include ChefWorkstationInitialize::SelfBootstrap::WithLogger
-
-        #   def [](key)
-        #     debug_worklog('Searching config key" ' + key.to_s + '"') unless key.to_s == 'debug'
-        #     if default_workstation_resource.key?(key)
-        #       default_workstation_resource[key]
-        #     elsif default_workstation_resource.key?(key.to_s)
-        #       default_workstation_resource[key.to_s]
-        #     end
-        #   end
-        # end
-
-        # def get_workstation
-        #   debug_worklog "Get workstation from #{self.class}"
-        #   @workstation = ChefLoggerResource.new if @workstation.nil?
-        #   @workstation
-        # end
       end
     end
   end

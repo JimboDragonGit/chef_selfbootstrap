@@ -17,81 +17,59 @@ module ChefWorkstationInitialize
       module CommandlineHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::DefaultMethodsHelpers
 
-        def is_mixlib_disabled?
-          !is_chef_constant_enabled? :Mixlib
-        end
-
         def main_command(command, args = [], run_opts = {})
-          command = 'sudo ' + command.to_s if run_opts[:sudo]
           main_command = [command, args].compact.join(' ')
-          worklog "running \"#{main_command}\" from a shell terminal" # if run_opts[:debug]
+          main_command = "sudo su -c '#{main_command.to_s}'" if run_opts[:sudo]
+          debug_worklog "running \"#{main_command}\" from a shell terminal with user #{ENV['USER']}\n"
           [main_command, run_options(run_opts)]
         end
 
-        def base_command(command, args = [], run_opts = {})
-          # logger.trace "running #{chef_command}"
-          final_command, final_run_options = main_command(command, args, run_opts)
+        def base_command(command, args = [], run_opts = { as_data: true })
+          debug_worklog "executing command #{command}"
+          as_system = run_opts[:as_system]
+          as_exit = run_opts[:as_exit]
+          as_fork = run_opts[:as_fork]
+          as_data = run_opts[:as_data]
 
-          if respond_to?('shell_out!')
-            warning_worklog('Using shell_out! as executer')
-            [shell_out!(final_command, final_run_options)]
-          elsif is_mixlib_disabled?
-            if run_opts[:as_system]
-              warning_worklog "Using system to run command #{final_command}"
-              exit_status = system(final_command)
-              if exit_status.nil?
-                1
-              elsif exit_status.is_a?(Integer)
-                exit_status
-              else
-                2
-              end
+          final_command, final_run_options = main_command(command, args, run_opts)
+          if as_system
+            debug_worklog "Using system to run command #{final_command}"
+            exit_status = system(final_command, final_run_options)
+            if exit_status.nil?
+              1
+            elsif exit_status.is_a?(Integer)
+              exit_status
+            elsif exit_status.is_a?(TrueClass)
+              0
+            elsif exit_status.is_a?(FalseClass)
+              2
             else
-              error_worklog('Cannot continue without at least a Chef workstation setup to run command ' + final_command)
-              restart_bootstrap
-              exit 1
+              warning_worklog("exit_status is a #{exit_status.class} with value #{exit_status}")
+              caller_worklog
+              3
             end
+          elsif as_exit
+            debug_worklog "Using exec to run command #{final_command}"
+            exec(final_command)
+          elsif as_fork
+            debug_worklog "Using fork to run command #{final_command}"
+            fork(final_command)
+          elsif as_data
+            debug_worklog "Using backtick to run command #{final_command}"
+            `#{final_command}`
           else
-            # warning_worklog('Using Mixlib::ShellOut as executer')
-            shell_command = Mixlib::ShellOut.new(final_command, final_run_options)
-            shell_command.run_command
-            # worklog shell_command.inspect
-            # output = shell_command.stdout
-            # output += "\nSTDERR: #{shell_command.stderr}" unless shell_command.error?
-            shell_command.stdout
+            error_worklog('Cannot continue without at least a MixLib is activated to run command ' + final_command)
+            restart_bootstrap
+            exit 4
           end
         end
 
         def run_options(run_opts = {})
-          # debug_worklog run_opts.inspect
-          run_opts[:live_stream] = $stdout if run_opts[:live]
-          run_opts.delete :sudo if run_opts.key? :sudo
-          run_opts.delete :live if run_opts.key? :live
-          run_opts.delete :debug if run_opts.key? :debug
+          %W(sudo live debug as_system as_exit as_fork as_data environment user group live_stream).each do |key|
+            run_opts.delete key.to_sym if run_opts.key? key.to_sym
+          end
           run_opts
         end
-
-        # Returns the home directory of the user
-        # @param [String] user must be a string.
-        # @return [String] the home directory of the user.
-        # from @Chef_16.6.14/provider/git
-        #
-        def get_homedir(user)
-          require 'etc' unless defined?(Etc)
-          case user
-          when Integer
-            Etc.getpwuid(user).dir
-          else
-            Etc.getpwnam(user.to_s).dir
-          end
-        end
-        #
-        # Define the methods that you would like to assist the work you do in recipes,
-        # resources, or templates.
-        #
-        # def my_helper_method
-        #   # help method implementation
-        # end
       end
     end
   end

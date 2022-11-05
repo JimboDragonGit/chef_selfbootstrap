@@ -25,41 +25,6 @@ module ChefWorkstationInitialize
     module WithChef
       module GitHelpers
         include ChefWorkstationInitialize::SelfBootstrap::WithChef::CommandlineHelpers
-
-        def get_git_submodule(git_name, git_info, action, compile_time)
-          # logger.warn("get_git_submodule of #{git_name} ==>\n#{git_info}")
-          worklog("get_git_submodule of #{git_name} ==>\n#{git_info}")
-          unless git_info.nil? || git_info['repository'].nil? || git_info['remote'].nil?
-            git_submodule git_name do
-              message "Get git_submodule #{git_name} for action #{action} at compile time #{compile_time} on remote '#{git_info['remote']}', repository #{git_info['repository']}, revision '#{git_info['revision']}', type '#{git_info['type']}', git_info '#{JSON.pretty_generate(git_info)}'"
-              # build_method build_method
-              destination (git_info['type'] == 'main_repo' || git_info['type'] == '' || git_info['type'].nil?) ? workstation_chef_repo_path : get_git_path(git_name)
-              repository git_info['repository']
-              revision git_info['revision']
-              remote git_info['remote']
-              checkout_branch "#{project_name}_#{workstation_resource[:environment]}"
-              additional_remotes git_info['additional_remotes'] if git_info['additional_remotes']
-              if git_info['submodules']
-                submodules generate_git_submodules(git_info['submodules'])
-                enable_submodules true
-              end
-              action action
-              compile_time compile_time
-            end ## end git
-          end
-        end
-
-        def get_git_server(git_action)
-          git_server project_name do
-            repositories repository_list
-            userdatabag 'users'
-            secretdatabag cookbook_name
-            secretdatabagitem 'cookbook_secret_keys'
-            secretdatabagkey 'secret'
-            userdatabagkey 'decompose_public_key'
-            action git_action
-          end
-        end
       end
     end
   end

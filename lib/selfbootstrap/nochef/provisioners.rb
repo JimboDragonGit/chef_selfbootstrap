@@ -18,32 +18,6 @@ module ChefWorkstationInitialize
       module ProvisionersHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::VerifiersHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::PlatformsHelpers
-        #
-        # Define the methods that you would like to assist the work you do in recipes,
-        # resources, or templates.
-        #
-        # def my_helper_method
-        #   worklog('Running method my_helper_method' + " for class #{self.class} inside file #{__FILE__}")
-
-        #   # help method implementation
-        # end
-
-        def provisioners
-          worklog('Running method provisioners' + " for class #{self.class} inside file #{__FILE__}")
-
-          [chef_zero_provisioner]
-        end
-
-        def chef_zero_provisioner
-          worklog('Running method chef_zero_provisioner' + " for class #{self.class} inside file #{__FILE__}")
-
-          {
-            name: 'chef_zero',
-            always_update_cookbooks: true,
-            kitchen_root: kitchen_root,
-            # encrypted_data_bag_secret_key_path:,
-          }
-        end
       end
     end
   end

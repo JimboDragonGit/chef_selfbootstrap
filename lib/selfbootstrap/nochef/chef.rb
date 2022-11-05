@@ -26,76 +26,41 @@ module ChefWorkstationInitialize
       module ChefHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::BerksHelpers
 
-        def is_chef_enabled?
-          is_chef_constant_enabled? :Chef
-        end
-
-        def is_chef_command?
-          ::File.basename($PROGRAM_NAME).eql?('chef')
-        end
-
-        def is_chef_cli_command?
-          ::File.basename($PROGRAM_NAME).eql?('chef-cli')
-        end
-
-        def is_chef_client_command?
-          ::File.basename($PROGRAM_NAME).eql?('chef-client')
-        end
-
-        def is_chef_installed?
-          ::Dir.exist?('/opt/chef-workstation')
-        end
-
-        def is_chef_profile_set?
-          is_chef_installed? ? (base_command('which ruby', [], as_system: true).include? '/opt/chef-workstation') : false
-        end
-
         def is_chefworkstation_available?
-          if is_chef_profile_set?
-            $LOAD_PATH.select do |loaded_path|
-              loaded_path.include? '/opt/chef-workstation'
-            end.count > 0
-          else
-            false
-          end
-        end
-
-        def chef(*args, **run_opts)
-          base_command('chef', args, run_opts)
+          Gem.ruby.include?('/opt/chef-workstation')
         end
 
         def chef_client(*args, **run_opts)
           base_command('chef-client', args, run_opts)
         end
 
-        def is_knife_gem_install?
-          chef('gem list -i knife') == 'true'
+        def chef(*args, **run_opts)
+          chef_cmd = 'chef'
+          base_command(chef_cmd, args, run_opts)
         end
 
-        def install_chef_workstation
-          base_command('curl -L https://omnitruck.chef.io/install.sh | bash -s -- -s once -P chef-workstation', [], as_system: true)
+        def chef_client_self_bootstrap_cmd
+          debug_worklog 'boostrapped with solo and chef-client'
+
+          # generate_workstation_berksfile
+          generate_policy 'infra_chef'
+          render_template(::File.join(get_path(workstation_solo_d_dir), ::File.join(project_name, project_name + '.rb')), 'solo.rb.erb', workstation: self)
+          chef_client_options = [self_bootstrap_options]
+          # chef_client_options << '--runlist infra_chef'
+          chef_client_options << '--named-run-list ' + 'infra_chef'
+          if ::File.exist?('solo.rb')
+            chef_client_options << '-c solo.rb'
+          else
+            chef_solo_options_command.each do |option|
+              chef_client_options << option
+            end
+            # chef_client_options << "--chef-zero-host #{default_hostname}"
+            # chef_client_options << "--chef-zero-port #{default_chefzero_portrange}"
+          end
+          debug_worklog "chef_client_options #{chef_client_options.join("\n")}"
+          chef_client chef_client_options, live: true, as_system: true
         end
       end
     end
   end
 end
-
-#
-# The module you have defined may be extended within the recipe to grant the
-# recipe the helper methods you define.
-#
-# Within your recipe you would write:
-#
-#     extend ChefWorkstationInitialize::ChefHelpers
-#
-#     my_helper_method
-#
-# You may also add this to a single resource within a recipe:
-#
-#     template '/etc/app.conf' do
-#       extend ChefWorkstationInitialize::ChefHelpers
-#       variables specific_key: my_helper_method
-#     end
-#
-
-# require_relative "../providers/git_resource"

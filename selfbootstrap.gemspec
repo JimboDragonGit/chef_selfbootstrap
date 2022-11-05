@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name          = 'selfbootstrap'
-  s.version       = '0.1.2'
+  s.version       = '0.1.3'
   s.license       = 'MIT'
   s.authors       = ['Jimmy Provencher']
   s.email         = ['jimbo_dragon@hotmail.com']
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   # all_files       = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   # s.files         = all_files.grep(%r!^(exe|lib|rubocop)/|^.rubocop.yml$!)
   code_folder = 'lib/'
-  s.files = %w(README.md LICENSE) + Dir.glob('{bin,lib,certs,test}/**/*')
+  s.files = %w(README.md LICENSE bin/selfbootstrap test/exemple/bootstrap.rb certs/public/jimbodragon.pem lib/selfbootstrap.rb lib/selfbootstrap/basecommands.rb lib/selfbootstrap/chefclient.rb lib/selfbootstrap/chefcommands.rb lib/selfbootstrap/chefrepo.rb lib/selfbootstrap/chefrepooptions.rb lib/selfbootstrap/chefsolo.rb lib/selfbootstrap/commands.rb lib/selfbootstrap/mixlib.rb lib/selfbootstrap/nochef.rb lib/selfbootstrap/reloadcommand.rb lib/selfbootstrap/workstation.rb) # + Dir.glob('{bin,lib,certs,test}/**/*')
   s.require_paths = [code_folder]
   s.executables   = %w(selfbootstrap)
   # s.bindir        = 'exe'

@@ -1,0 +1,368 @@
+{
+  "revision_id": "115794964c3e56542390faa73abc357b06b09d22c0cee15a97c87600ca0b9c75",
+  "name": "infra_chef",
+  "run_list": [
+    "recipe[infra_chef::default]"
+  ],
+  "included_policy_locks": [
+
+  ],
+  "cookbook_locks": {
+    "apache2": {
+      "version": "8.14.4",
+      "identifier": "2c75921f23a2f9ee3b707ce78b166c1e81c4b4f4",
+      "dotted_decimal_identifier": "12514169423373049.67056398775061270.118878281970932",
+      "cache_key": "apache2-8.14.4-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/apache2/versions/8.14.4/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/apache2/versions/8.14.4/download",
+        "version": "8.14.4"
+      }
+    },
+    "apt": {
+      "version": "7.4.2",
+      "identifier": "eb6d17bcea84f3f6fae7128626b6d24e9b8b7dba",
+      "dotted_decimal_identifier": "66266568248165619.69518714625992374.231235058892218",
+      "cache_key": "apt-7.4.2-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/apt/versions/7.4.2/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/apt/versions/7.4.2/download",
+        "version": "7.4.2"
+      }
+    },
+    "chef-git-server": {
+      "version": "1.0.0",
+      "identifier": "99e8d47a0fea45ded5dd4fabef50d804cadd7118",
+      "dotted_decimal_identifier": "43321670715304517.62722591330922320.237515094978840",
+      "source": "../../../../../cookbooks/chef-git-server",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "git@github.com:jimbodragon/chef-git-server.git",
+        "revision": "7517eccac81fb949bfcde3e43d208570414f54f3",
+        "working_tree_clean": false,
+        "published": true,
+        "synchronized_remote_branches": [
+          "origin/HEAD -> origin/master",
+          "origin/master"
+        ]
+      },
+      "source_options": {
+        "path": "../../../../../cookbooks/chef-git-server"
+      }
+    },
+    "chef-ingredient": {
+      "version": "3.5.0",
+      "identifier": "ad09bdf3fde3c19067f3d0a63b1f555fd1f8471d",
+      "dotted_decimal_identifier": "48705882417914817.40646693521603359.93870032963357",
+      "cache_key": "chef-ingredient-3.5.0-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/chef-ingredient/versions/3.5.0/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/chef-ingredient/versions/3.5.0/download",
+        "version": "3.5.0"
+      }
+    },
+    "chef_workstation_initialize": {
+      "version": "0.1.0",
+      "identifier": "2f4d7b2709b748efa393230cab014360dcd0163d",
+      "dotted_decimal_identifier": "13314515236665160.67452371777399553.74083300546109",
+      "source": "../../../../../cookbooks/chef_workstation_initialize",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "git@github.com:jimbodragon/chef_workstation_initialize.git",
+        "revision": "7049529103ce970149e199dc8cffa98fa1383005",
+        "working_tree_clean": false,
+        "published": true,
+        "synchronized_remote_branches": [
+          "origin/HEAD -> origin/master",
+          "origin/master"
+        ]
+      },
+      "source_options": {
+        "path": "../../../../../cookbooks/chef_workstation_initialize"
+      }
+    },
+    "docker": {
+      "version": "10.2.2",
+      "identifier": "df41ed3ff046688d942a02f18acb5ec3548b5ac9",
+      "dotted_decimal_identifier": "62841407042242152.39850879875123915.104193030052553",
+      "cache_key": "docker-10.2.2-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/docker/versions/10.2.2/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/docker/versions/10.2.2/download",
+        "version": "10.2.2"
+      }
+    },
+    "docker-ce": {
+      "version": "0.15.0",
+      "identifier": "94b6091653e562c50593bddfc4153e9524664509",
+      "dotted_decimal_identifier": "41858446698734946.55456702515889173.68810281731337",
+      "cache_key": "docker-ce-0.15.0-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/docker-ce/versions/0.15.0/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/docker-ce/versions/0.15.0/download",
+        "version": "0.15.0"
+      }
+    },
+    "docker-engine": {
+      "version": "0.2.5",
+      "identifier": "0c92a6fd6ce80450dbe2119a96a4fde73d8e73ca",
+      "dotted_decimal_identifier": "3538945634527236.22759762141288100.279169612018634",
+      "cache_key": "docker-engine-0.2.5-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/docker-engine/versions/0.2.5/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/docker-engine/versions/0.2.5/download",
+        "version": "0.2.5"
+      }
+    },
+    "infra_chef": {
+      "version": "0.1.1",
+      "identifier": "cf5d1e879dbafaeffd316eafad672205556f0ead",
+      "dotted_decimal_identifier": "58367705884769018.67550908186078567.37406303522477",
+      "source": "../../../../../cookbooks/infra_chef",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "git@github.com:jimbodragon/infra_chef.git",
+        "revision": "d4b0a149ae7845e18ea8cf255e534bff51f57757",
+        "working_tree_clean": false,
+        "published": true,
+        "synchronized_remote_branches": [
+          "origin/HEAD -> origin/master",
+          "origin/master"
+        ]
+      },
+      "source_options": {
+        "path": "../../../../../cookbooks/infra_chef"
+      }
+    },
+    "ssh_authorized_keys": {
+      "version": "1.0.0",
+      "identifier": "dcf4b256c2b1d2761127857df178ae176f5985ce",
+      "dotted_decimal_identifier": "62193541673300434.33232908692877688.191415675618766",
+      "cache_key": "ssh_authorized_keys-1.0.0-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/ssh_authorized_keys/versions/1.0.0/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/ssh_authorized_keys/versions/1.0.0/download",
+        "version": "1.0.0"
+      }
+    },
+    "vagrant": {
+      "version": "3.0.1",
+      "identifier": "676dfcb2633b0aafd2ae976b60759e80ad16f4f1",
+      "dotted_decimal_identifier": "29112854693231370.49489768230903925.174275496965361",
+      "cache_key": "vagrant-3.0.1-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/vagrant/versions/3.0.1/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/vagrant/versions/3.0.1/download",
+        "version": "3.0.1"
+      }
+    },
+    "virtualbox": {
+      "version": "4.1.0",
+      "identifier": "9280833798c6d0e3fadba1f5a9bc62010a3af729",
+      "dotted_decimal_identifier": "41236647661586128.64170640935332284.107756606125865",
+      "source": "../../../../../cookbooks/virtualbox",
+      "cache_key": null,
+      "scm_info": {
+        "scm": "git",
+        "remote": "git@github.com:jimbodragon/virtualbox.git",
+        "revision": "ff502ced52afe58f928597ade11c7287f640d266",
+        "working_tree_clean": false,
+        "published": true,
+        "synchronized_remote_branches": [
+          "origin/HEAD -> origin/master",
+          "origin/master"
+        ]
+      },
+      "source_options": {
+        "path": "../../../../../cookbooks/virtualbox"
+      }
+    },
+    "yum-epel": {
+      "version": "4.5.0",
+      "identifier": "dad6a6c002700a1ae06443e61afaf9abf5b6e2ab",
+      "dotted_decimal_identifier": "61597556597223434.7565070634982138.274516957127339",
+      "cache_key": "yum-epel-4.5.0-supermarket.chef.io",
+      "origin": "https://supermarket.chef.io:443/api/v1/cookbooks/yum-epel/versions/4.5.0/download",
+      "source_options": {
+        "artifactserver": "https://supermarket.chef.io:443/api/v1/cookbooks/yum-epel/versions/4.5.0/download",
+        "version": "4.5.0"
+      }
+    }
+  },
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+
+  },
+  "solution_dependencies": {
+    "Policyfile": [
+      [
+        "apache2",
+        "= 8.14.4"
+      ],
+      [
+        "apt",
+        "= 7.4.2"
+      ],
+      [
+        "chef-git-server",
+        "= 1.0.0"
+      ],
+      [
+        "chef-ingredient",
+        "= 3.5.0"
+      ],
+      [
+        "chef_workstation_initialize",
+        "= 0.1.0"
+      ],
+      [
+        "docker",
+        "= 10.2.2"
+      ],
+      [
+        "docker-ce",
+        "= 0.15.0"
+      ],
+      [
+        "docker-engine",
+        "= 0.2.5"
+      ],
+      [
+        "infra_chef",
+        "= 0.1.1"
+      ],
+      [
+        "ssh_authorized_keys",
+        "= 1.0.0"
+      ],
+      [
+        "vagrant",
+        "= 3.0.1"
+      ],
+      [
+        "virtualbox",
+        "= 4.1.0"
+      ],
+      [
+        "yum-epel",
+        "= 4.5.0"
+      ]
+    ],
+    "dependencies": {
+      "apache2 (8.14.4)": [
+        [
+          "yum-epel",
+          ">= 0.0.0"
+        ]
+      ],
+      "apt (7.4.2)": [
+
+      ],
+      "chef-git-server (1.0.0)": [
+        [
+          "ssh_authorized_keys",
+          ">= 0.0.0"
+        ]
+      ],
+      "chef-ingredient (3.5.0)": [
+
+      ],
+      "chef_workstation_initialize (0.1.0)": [
+        [
+          "chef-git-server",
+          ">= 0.0.0"
+        ],
+        [
+          "virtualbox",
+          ">= 0.0.0"
+        ],
+        [
+          "vagrant",
+          ">= 0.0.0"
+        ],
+        [
+          "docker",
+          ">= 0.0.0"
+        ],
+        [
+          "docker-ce",
+          ">= 0.0.0"
+        ],
+        [
+          "docker-engine",
+          ">= 0.0.0"
+        ],
+        [
+          "chef-ingredient",
+          ">= 0.0.0"
+        ]
+      ],
+      "docker (10.2.2)": [
+
+      ],
+      "docker-ce (0.15.0)": [
+        [
+          "apt",
+          ">= 0.0.0"
+        ]
+      ],
+      "docker-engine (0.2.5)": [
+
+      ],
+      "infra_chef (0.1.1)": [
+        [
+          "chef_workstation_initialize",
+          ">= 0.0.0"
+        ],
+        [
+          "chef-git-server",
+          ">= 0.0.0"
+        ],
+        [
+          "virtualbox",
+          ">= 0.0.0"
+        ],
+        [
+          "vagrant",
+          ">= 0.0.0"
+        ],
+        [
+          "docker",
+          ">= 0.0.0"
+        ],
+        [
+          "docker-ce",
+          ">= 0.0.0"
+        ],
+        [
+          "docker-engine",
+          ">= 0.0.0"
+        ],
+        [
+          "chef-ingredient",
+          ">= 0.0.0"
+        ]
+      ],
+      "ssh_authorized_keys (1.0.0)": [
+
+      ],
+      "vagrant (3.0.1)": [
+
+      ],
+      "virtualbox (4.1.0)": [
+        [
+          "apache2",
+          ">= 0.0.0"
+        ]
+      ],
+      "yum-epel (4.5.0)": [
+
+      ]
+    }
+  }
+}

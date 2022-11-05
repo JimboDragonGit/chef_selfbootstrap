@@ -9,20 +9,14 @@
 # camel-casing throughout the remainder of the name.
 #
 
-require_relative 'nochef'
-require_relative 'withchef/selfbootstrap'
+require_relative 'workstationresource'
 
 module ChefWorkstationInitialize
   module SelfBootstrap
-    module WithChef
-      include ChefWorkstationInitialize::SelfBootstrap::WithChef::SelfBootstrapHelpers
-      #
-      # Define the methods that you would like to assist the work you do in recipes,
-      # resources, or templates.
-      #
-      # def my_helper_method
-      #   # help method implementation
-      # end
+    module WithLogger
+      module SelfBootstrapHelpers
+        include ChefWorkstationInitialize::SelfBootstrap::WithLogger::WorkstationResourceHelpers
+      end
     end
   end
 end
@@ -33,14 +27,15 @@ end
 #
 # Within your recipe you would write:
 #
-#     extend ChefWorkstationInitialize::SelfBootstrap::WithChefHelpers
+#     extend ChefWorkstationInitialize::WorkstationHelpers
 #
 #     my_helper_method
 #
 # You may also add this to a single resource within a recipe:
 #
 #     template '/etc/app.conf' do
-#       extend ChefWorkstationInitialize::SelfBootstrap::WithChefHelpers
+#       extend ChefWorkstationInitialize::WorkstationHelpers
 #       variables specific_key: my_helper_method
 #     end
 #
+

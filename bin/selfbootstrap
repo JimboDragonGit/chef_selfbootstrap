@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/opt/chef-workstation/embedded/bin/ruby
 # Trap interrupts to quit cleanly. See
 # https://twitter.com/mitchellh/status/283014103189053442
 Signal.trap('INT') { exit 1 }
@@ -7,4 +7,4 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), %w(.. lib))
 require 'rubygems' unless defined?(Gem)
 require 'selfbootstrap'
 
-ChefWorkstationInitialize::SelfBootstrap.bootstrap
+SelfBootstrap.bootstrap

@@ -16,20 +16,6 @@ module ChefWorkstationInitialize
     module NoChef
       module PlatformsHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::SuitesHelpers
-        #
-        # Define the methods that you would like to assist the work you do in recipes,
-        # resources, or templates.
-        #
-        # def my_helper_method
-        #   worklog('Running method my_helper_method' + " for class #{self.class} inside file #{__FILE__}")
-
-        #   # help method implementation
-        # end
-        def default_platforms
-          worklog('Running method default_platforms' + " for class #{self.class} inside file #{__FILE__}")
-
-          workstation_resource[:platforms]
-        end
       end
     end
   end

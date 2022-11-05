@@ -12,16 +12,6 @@ module ChefWorkstationInitialize
   module SelfBootstrap
     module NoChef
       module SuitesHelpers
-        #
-        # Define the methods that you would like to assist the work you do in recipes,
-        # resources, or templates.
-        #
-        # def my_helper_method
-        #           #   # help method implementation
-        # end
-        def default_suites
-          workstation_resource[:suites]
-        end
       end
     end
   end

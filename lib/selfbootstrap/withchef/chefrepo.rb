@@ -25,44 +25,6 @@ module ChefWorkstationInitialize
     module WithChef
       module ChefRepoHelpers
         include ChefWorkstationInitialize::SelfBootstrap::WithChef::ChefHelpers
-
-        def define_cron_job
-          cron_d "chef_client_#{project_name}" do
-            if workstation_resource[:chef_boostrapped]
-              command               'chef-client'
-            else
-              command               workstation_resource[:cron_chef_solo_command]
-            end
-            comment               'Run chef client periodicaly'
-            day                   workstation_resource[:cron]['day'] if workstation_resource[:cron]['day']
-            hour                  workstation_resource[:cron]['hour'] if workstation_resource[:cron]['hour']
-            minute                workstation_resource[:cron]['minute'] if workstation_resource[:cron]['minute']
-            month                 workstation_resource[:cron]['month'] if workstation_resource[:cron]['month']
-            weekday               workstation_resource[:cron]['weekday'] if workstation_resource[:cron]['weekday']
-          end
-        end
-
-        def render_template(generated_path, source, **variables)
-          if respond_to? :template
-            template generated_path do
-              extend ChefWorkstationInitialize::SelfBootstrap
-              cookbook workstation_resource[:cookbook_source]
-              source source
-              variables variables
-            end
-          elsif ::File.basename(generated_path).include?('kitchen.yml')
-            kitchen 'init'
-          else
-            error_worklog "Need to be inside a Chef recipe or Chef resource to run this rendering for #{generated_path}"
-          end
-          # template ::File.join(get_path(workstation_chef_repo_path), 'chefignore') do
-          #   extend ChefWorkstationInitialize::SelfBootstrap
-          #   cookbook workstation_resource[:cookbook_source]
-          #   source 'chefignore.erb'
-          #   variables(workstation: self)
-          #   action :create_if_missing
-          # end
-        end
       end
     end
   end

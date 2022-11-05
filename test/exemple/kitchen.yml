@@ -1,0 +1,43 @@
+<%
+require 'selfbootstrap'
+extend SelfBootstrap
+%>
+---
+provisioner:
+  name: chef_zero
+  always_update_cookbooks: true
+  kitchen_root: <%= workstation_chef_repo_path %>
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: <%= project_name %>
+    driver:
+      name: vagrant
+      box: bento/ubuntu-20.04
+      cache_directory: <%= omnibus_cache_directory %>
+      kitchen_cache_directory: <%= kitchen_cache_directory %>
+      domain: <%= project_name %>.local
+      vm_hostname: <%= project_name %>.local
+      network:
+      - ["forwarded_port", {guest: 2222, host: <%= ssh_port %>}]
+      - ["forwarded_port", {guest: 80, host: <%= http_port %>}]
+      - ["forwarded_port", {guest: 443, host: <%= https_port %>}]
+      customize:
+        memory: 8196
+        cpus: 2
+        firmware: bios
+        hwvirtex: "on"
+        vtxvpid: "on"
+        vtxux: "on"
+        nested-hw-virt: "on"
+        cpuhotplug: "on"
+        vrde: "on"
+        vrdeport: 3390
+        autostart-enabled: "on"
+suites:
+  - name: default
+    named_run_list: default
+    includes:
+    - <%= project_name %>

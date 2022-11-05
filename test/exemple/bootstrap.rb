@@ -1,8 +1,10 @@
-#!/usr/bin/env ruby
+#!/opt/chef-workstation/embedded/bin/ruby
 
-puts $LOAD_PATH.unshift File.join(File.dirname(File.dirname(__dir__)), %w(lib))
+$LOAD_PATH.unshift File.join(File.dirname(File.dirname(__dir__)), %w(lib))
 
 ::Dir.chdir __dir__
 
+::File.delete 'bootstrapping_in_progress' if ::File.exist? 'bootstrapping_in_progress'
+
 require 'selfbootstrap'
-ChefWorkstationInitialize::SelfBootstrap.bootstrap
+SelfBootstrap.bootstrap

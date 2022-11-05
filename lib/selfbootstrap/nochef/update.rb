@@ -25,19 +25,6 @@ module ChefWorkstationInitialize
     module NoChef
       module UpdateHelpers
         include ChefWorkstationInitialize::SelfBootstrap::NoChef::KnifeHelpers
-
-        def commit_state
-          worklog('Running method commit_state(auto_chef_repo)' + " for class #{self.class} inside file #{__FILE__}")
-
-          repository_list.each do |submodule|
-            %w(commit push).each do |action|
-              get_git_submodule(submodule, gitinfo['submodules'][submodule], action.to_sym, workstation_resource[:compile_time])
-            end unless parent_nil?(gitinfo, 'submodules', submodule)
-          end
-          get_self_git :commit, workstation_resource[:compile_time]
-          get_self_git :push, workstation_resource[:compile_time]
-          Chef::Log.warn('TODO manage branch and merge for the workflow')
-        end
       end
     end
   end

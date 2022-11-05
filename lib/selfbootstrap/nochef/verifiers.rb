@@ -12,29 +12,6 @@ module ChefWorkstationInitialize
   module SelfBootstrap
     module NoChef
       module VerifiersHelpers
-        #
-        # Define the methods that you would like to assist the work you do in recipes,
-        # resources, or templates.
-        #
-        # def my_helper_method
-        #   worklog('Running method my_helper_method' + " for class #{self.class} inside file #{__FILE__}")
-
-        #   # help method implementation
-        # end
-
-        def verifiers
-          worklog('Running method verifiers' + " for class #{self.class} inside file #{__FILE__}")
-
-          [inspec_verifier]
-        end
-
-        def inspec_verifier
-          worklog('Running method inspec_verifier' + " for class #{self.class} inside file #{__FILE__}")
-
-          {
-            name: 'inspec',
-          }
-        end
       end
     end
   end

@@ -18,27 +18,13 @@
 # camel-casing throughout the remainder of the name.
 #
 
+require_relative '../withmixlib'
+require_relative '../withchefsolo'
+
 module ChefWorkstationInitialize
   module SelfBootstrap
     module WithChef
       module DefaultMethodsHelpers
-        include ChefWorkstationInitialize::SelfBootstrap::NoChef::SelfBootstrapHelpers
-
-        def generate_directory(dir_path)
-          if respond_to? :directory
-            directory get_path(dir_path) do
-              group workstation_resource[:group]
-              mode '0775'
-              recursive true
-            end
-          else
-            super(dir_path)
-          end
-        end
-
-        def worklog(logstr)
-          ::Chef::Log.warn("(#{worklog_counter}):: #{logstr}")
-        end
       end
     end
   end
